@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - ActiveBalls
+  - NewBall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Foreground
   - Water
   - UI
   - 
@@ -41,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3124665969
+    locked: 0
+  - name: Foreground
+    uniqueID: 78096777
     locked: 0
