@@ -1,96 +1,119 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
+using TMPro;
 public class RotateHandler : MonoBehaviour
 {
     [SerializeField] GameObject initBall;
-    [SerializeField] float ballSpeed = 10;
-    [SerializeField] GameObject instanceBall;
+
+    [SerializeField] GameObject frog;
+
+    [SerializeField] Transform ballSpawnPosition;
+    [SerializeField] TextMeshPro nextCharTMP;
+
+    private GameObject instanceBall;
 
     private Vector3 lookPos;
+
+    private MoveWords moveWordsScript;
+
+    private Vector2 worldPosition;
+    private Vector2 direction;
+    private float angle;
+
+    private string nextChar;
 
     // Start is called before the first frame update
     void Start()
     {
-        CreateBall();
+        moveWordsScript = GameObject.FindObjectOfType<MoveWords>();
+        nextChar = moveWordsScript.getToFillChar();
+        nextCharTMP.SetText(nextChar);
     }
 
     // Update is called once per frame
     void Update()
     {
         RotatePlayerAlongMousePosition();
-        SetBallPostion();
+        HandleCharBallShooting();
     }
 
     private void FixedUpdate()
     {
-        ShootBall();
-    }
 
-    private void CreateBall()
-    {
-        instanceBall = Instantiate(initBall, transform.position, Quaternion.identity);
-        instanceBall.SetActive(true);
-
-        instanceBall.tag = "NewBall";
-        instanceBall.gameObject.layer = LayerMask.NameToLayer("Default");
-
-        SetBallColor(instanceBall);
-    }
-
-    private void SetBallColor(GameObject go)
-    {
-        BallColor randColor = MoveWords.GetRandomBallColor();
-
-        switch (randColor)
-        {
-            case BallColor.red:
-                go.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
-                break;
-
-            case BallColor.green:
-                go.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-                break;
-
-            case BallColor.blue:
-                go.GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
-                break;
-
-            case BallColor.yellow:
-                go.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
-                break;
-        }
     }
 
     // Rotate the launcher along the mouse position
     private void RotatePlayerAlongMousePosition()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        // Rotate the frog towards Mouse position
+        worldPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        direction = (worldPosition - (Vector2)frog.transform.position).normalized;
+        frog.transform.right = direction;
 
-        if (Physics.Raycast(ray, out hit, Camera.main.transform.position.y))
-            lookPos = hit.point;
+        // Debug.Log(frog.transform.rotation.z);
 
-        Vector3 lookDir = lookPos - transform.position;
-        lookDir.y = 0;
-
-        transform.LookAt(transform.position + lookDir, Vector3.up);
+        // Flip the frog if it reaches a 90 degree threshod
+        angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Vector3 localScale = new Vector3(1f, 1f, 1f);
+        if (angle > 90 || angle < -90)
+        {
+            localScale.y = -1f;
+        }
+        else
+        {
+            localScale.y = 1f;
+        }
+        frog.transform.localScale = localScale;
     }
 
     // Set balls postions and forward too the launcher
-    private void SetBallPostion()
+    private void HandleCharBallShooting()
     {
-        instanceBall.transform.forward = transform.forward;
-        instanceBall.transform.position = transform.position + transform.forward * transform.localScale.z;
+        if (Mouse.current.leftButton.wasPressedThisFrame && moveWordsScript.isGamePlaying())
+        {
+            // Spawn char ball
+            instanceBall = Instantiate(initBall, ballSpawnPosition.position, frog.transform.rotation);
+            instanceBall.SetActive(true);
+
+            instanceBall.tag = "NewBall";
+            instanceBall.gameObject.layer = LayerMask.NameToLayer("Default");
+
+            SetBallColor(instanceBall);
+            if (instanceBall.GetComponent<BallColliderOpt>() != null)
+            {
+                instanceBall.GetComponent<BallColliderOpt>().setToMatchChar(nextChar);
+                nextChar = moveWordsScript.getToFillChar();
+                nextCharTMP.SetText(nextChar);
+            }
+
+            GetComponent<AudioSource>().Play();
+
+            Debug.Log("HandleCharBallShooting char=" + instanceBall.GetComponent<BallColliderOpt>().getToMatchChar());
+        }
     }
 
-    private void ShootBall()
+    private void SetBallColor(GameObject go)
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        BallColor randColor = MoveWords.GetRandomBallColor();
+        switch (randColor)
         {
-            instanceBall.GetComponent<Rigidbody>().AddForce(instanceBall.transform.forward * ballSpeed);
-            CreateBall();
+            case BallColor.red:
+                go.GetComponent<SpriteRenderer>().color = Color.red;
+                break;
+
+            case BallColor.green:
+                go.GetComponent<SpriteRenderer>().color = Color.green;
+                break;
+
+            case BallColor.blue:
+                go.GetComponent<SpriteRenderer>().color = Color.blue;
+                break;
+
+            case BallColor.yellow:
+                go.GetComponent<SpriteRenderer>().color = Color.yellow;
+                break;
         }
     }
 
@@ -99,4 +122,30 @@ public class RotateHandler : MonoBehaviour
         Color color = new Color(Random.Range(0F, 1F), Random.Range(0, 1F), Random.Range(0, 1F));
         go.GetComponent<Renderer>().material.SetColor("_Color", color);
     }
+
+    private void CreateBall()
+    {
+        instanceBall = Instantiate(initBall, frog.transform.position, Quaternion.identity);
+        instanceBall.SetActive(true);
+
+        instanceBall.tag = "NewBall";
+        instanceBall.gameObject.layer = LayerMask.NameToLayer("Default");
+
+        SetBallColor(instanceBall);
+        // SetBallFillChar(instanceBall);
+        if (instanceBall.GetComponent<BallColliderOpt>() != null)
+        {
+            instanceBall.GetComponent<BallColliderOpt>().setToMatchChar(moveWordsScript.getToFillChar());
+        }
+
+        Debug.Log("New ball with a fill char=" + instanceBall.GetComponent<BallColliderOpt>().getToMatchChar());
+    }
+
+    private void SetBallFillChar(GameObject go)
+    {
+        go.GetComponent<BallColliderOpt>().setToMatchChar("new");
+        Debug.Log("a new ball with fill char=" + "new");
+    }
+
+
 }
