@@ -171,7 +171,7 @@ MonoBehaviour:
   m_PlayOnAwake: 1
   m_LoopMode: 0
   m_Method: 1
-  m_Duration: 9.131088
+  m_Duration: 9.020349
   m_MaxSpeed: 10
   m_EasingMode: 0
   m_AlignmentMode: 1
@@ -5899,8 +5899,7 @@ PrefabInstance:
     - target: {fileID: 603261949341367379, guid: e5bab0f3410ee4ef6866f5b69430357e,
         type: 3}
       propertyPath: lines.Array.data[0]
-      value: 'Congratulation to pass! {2} words: {3} all filled correctly by your
-        skill'
+      value: 'Congratulations! {2} words: {3} all filled correctly by your skill'
       objectReference: {fileID: 0}
     - target: {fileID: 1940939377432444402, guid: e5bab0f3410ee4ef6866f5b69430357e,
         type: 3}

@@ -3563,6 +3563,33 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 10643886191993153, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_Text
+      value: 'Background Music
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 10643886191993182, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 612.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 10643886191993182, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 96.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 10643886191993182, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 10643886191993182, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 278179150462776970, guid: a95d7ff09711f4c49a56462b5322f9d3,
         type: 3}
       propertyPath: m_Enabled
@@ -3723,6 +3750,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -7.7
       objectReference: {fileID: 0}
+    - target: {fileID: 4122420881449361089, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_Text
+      value: Master
+      objectReference: {fileID: 0}
     - target: {fileID: 4122420882026819426, guid: a95d7ff09711f4c49a56462b5322f9d3,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3813,6 +3845,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -103
+      objectReference: {fileID: 0}
+    - target: {fileID: 7964141861250279924, guid: a95d7ff09711f4c49a56462b5322f9d3,
+        type: 3}
+      propertyPath: m_Text
+      value: Sound Effects
       objectReference: {fileID: 0}
     - target: {fileID: 7964141861810559063, guid: a95d7ff09711f4c49a56462b5322f9d3,
         type: 3}
